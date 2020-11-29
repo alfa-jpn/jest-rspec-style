@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Run test in docker
+#
+set -e;
+
+# Running unit test.
+docker-compose run --rm app npm run test;
+
+# Running linter.
+docker-compose run --rm app npm run lint;

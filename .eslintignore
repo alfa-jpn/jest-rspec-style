@@ -1,0 +1,8 @@
+# Coverage
+/coverage
+
+# Output files
+/dist
+
+# Packages
+/node_modules

@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Setup development environment.
+#
+set -e;
+
+# Build docker image.
+docker-compose build;
+
+# Intall packages.
+docker-compose run --rm app npm install;

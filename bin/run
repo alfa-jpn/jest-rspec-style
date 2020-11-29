@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Run npm command.
+#
+# @example
+# run test
+#
+set -e;
+
+# Run
+docker-compose run --rm app npm run $@;
