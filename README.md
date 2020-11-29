@@ -6,7 +6,18 @@ RSpec like DSL extension for jest.
 ## Usage
 Usable RSpec like DSL.
 
+Write `spec_heler`.
+
 ```javascript
+import JestRSpesStyle from 'jest-rspec-style';
+JestRSpesStyle.setup();
+```
+
+Write test.
+
+```javascript
+import 'spec_helper'
+
 describe('Hoge', () => {
   lazy('hoge', () =>
     new Hoge({ value: lazy('value') })

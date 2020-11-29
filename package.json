@@ -1,8 +1,9 @@
 {
   "name": "jest-rspec-style",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "RSpec style extention for jest",
-  "main": "dist/jest-rspec-style.js",
+  "repository": "alfa-jpn/jest-rspec-style",
+  "main": "dist/jest_rspec_style.js",
   "scripts": {
     "build": "tsc",
     "lint": "eslint .",
