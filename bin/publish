@@ -1,0 +1,24 @@
+#!/bin/sh
+#
+# Publish package.
+#
+set -e;
+
+BIN_DIR=`dirname $0`;
+
+# Setup
+${BIN_DIR}/setup;
+
+# Test
+${BIN_DIR}/test;
+
+# Clean
+git clean -fd;
+git checkout -f;
+docker-compose run --rm app rm -rf /app/dist;
+
+# Build
+docker-compose run --rm app npm run build;
+
+# Publish
+docker-compose run --rm app npm publish;
