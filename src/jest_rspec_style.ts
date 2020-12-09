@@ -7,6 +7,7 @@ import Subject         from './jest_rspec_styles/lazy_variables/subject.interfac
 import SharedExamples  from './jest_rspec_styles/shared_examples/shared_examples.interface';
 import IncludeExamples from './jest_rspec_styles/shared_examples/include_examples.interface';
 import Allow           from './jest_rspec_styles/mocks/allow.interface';
+import Matcher         from './jest_rspec_styles/matcher';
 
 /**
  * Global extension.
@@ -51,6 +52,7 @@ export default class JestRSpecStyle {
     global.includeExamples = this._sharedExample.includeExamples.bind(this._sharedExample);
     global.allow = this._mock.allow.bind(this._mock);
     global.allowAnyInstanceOf = this._mock.allowAnyInstanceOf.bind(this._mock);
+    expect.extend(Matcher);
 
     afterEach(this._reset.bind(this));
   }
