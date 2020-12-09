@@ -1,6 +1,6 @@
 {
   "name": "jest-rspec-style",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "RSpec style extention for jest",
   "repository": "alfa-jpn/jest-rspec-style",
   "main": "dist/jest_rspec_style.js",
