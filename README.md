@@ -36,7 +36,36 @@ describe('Hoge', () => {
       expect(subject()).toEqual('hoge-vale')
     })
 
-    context('When stub', () => {
+    context('When use change matcher', () => {
+      it('Changed', () => {
+        let cnt = 0;
+        epxect(() => cnt++).toChange(() => cnt);
+        epxect(() => cnt++).toChange(() => cnt, { from: 1, to: 2});
+      })
+    })
+
+    context('When use receive matcher', () => {
+      it('Received', () => {
+        const date = new Date();
+        epxect(date).toReceive('toString')
+        date.toString();
+      })
+
+      it('2 times Received', () => {
+        const date = new Date();
+        epxect(date).toReceive('toString', { times: 2 })
+        date.toString();
+        date.toString();
+      })
+
+      it('Received with args', () => {
+        const date = new Date();
+        epxect(date).toReceive('setTime', { with: [123] })
+        date.setTime(123);
+      })
+    })
+
+    context('When use stub', () => {
       beforeEach(() => {
         allowAnyInstanceOf(lazy('hoge')).toReceive('call').andReturn('stub-value')
       })
@@ -47,7 +76,7 @@ describe('Hoge', () => {
       )
     })
 
-    context('When stub all instance', () => {
+    context('When use stub all instance', () => {
       beforeEach(() => {
         allowAnyInstanceOf(Hoge).toReceive('call').andReturn('stub-value')
       })
@@ -77,6 +106,8 @@ describe('Hoge', () => {
 - includeExamples
 - context
 - lazy
+- expect(...).toChange(() => ..., { from: .., to: ..})
+- expect(...).toReceive(..., { with: .., times: ..})
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub.
