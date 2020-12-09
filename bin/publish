@@ -21,4 +21,4 @@ docker-compose run --rm app rm -rf /app/dist;
 docker-compose run --rm app npm run build;
 
 # Publish
-docker-compose run --rm app npm publish;
+npm publish;
