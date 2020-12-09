@@ -8,6 +8,7 @@ import SharedExamples  from './jest_rspec_styles/shared_examples/shared_examples
 import IncludeExamples from './jest_rspec_styles/shared_examples/include_examples.interface';
 import Allow           from './jest_rspec_styles/mocks/allow.interface';
 import Matcher         from './jest_rspec_styles/matcher';
+import IMatcher        from './jest_rspec_styles/matchers/matchers.interface';
 
 /**
  * Global extension.
@@ -22,6 +23,12 @@ declare global {
   var allow: Allow;
   var allowAnyInstanceOf: Allow;
   /* eslint-enable no-var */
+
+  // eslint-disable-next-line @typescript-eslint/no-namespace
+  namespace jest {
+    // eslint-disable-next-line @typescript-eslint/no-empty-interface
+    interface Matchers<R> extends IMatcher<R> {}
+  }
 }
 
 /**
