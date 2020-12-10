@@ -1,4 +1,6 @@
 # jest-rspec-style
+[![Build Status](https://travis-ci.org/alfa-jpn/jest-rspec-style.svg?branch=master)](https://travis-ci.org/alfa-jpn/jest-rspec-style)
+
 RSpec like DSL extension for jest.
 
 ## Installation
