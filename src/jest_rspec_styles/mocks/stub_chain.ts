@@ -78,10 +78,15 @@ export default class StubChain {
 
     methods.reduce((target: any, method: string) => {
       const stub = {};
+
       target[method] = target[method] || jest.fn();
-      mocks.push(
-        jest.spyOn(target, method).mockImplementation(() => stub)
-      );
+      if (jest.isMockFunction(target[method])) {
+        target[method] = jest.fn(target[method]);
+      } else {
+        jest.spyOn(target, method);
+      }
+      mocks.push(target[method].mockImplementation(() => stub));
+
       return stub;
     }, this._target);
 
