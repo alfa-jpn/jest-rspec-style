@@ -15,9 +15,41 @@ describe('Mock', () => {
       return new Date();
     });
 
-    it('Stub method', () => {
+    it('Mock method', () => {
       subject();
       expect(lazy('target').toString()).toEqual('stub-value');
+    });
+
+    context('When after mock method', () => {
+      beforeEach(() => {
+        subject();
+      });
+
+      it('Can unmock method.', () => {
+        subject();
+        expect(() => jest.restoreAllMocks()).toChange(() => jest.isMockFunction(lazy('target').toString), {
+          from: true,
+          to:   false,
+        });
+      });
+    });
+
+    context('When mock multiple times', () => {
+      beforeEach(() => {
+        subject();
+        lazy('described_instance').allow(lazy('target')).toReceive('toString').andCallOriginal();
+      });
+
+      it('Mock method', () => {
+        expect(lazy('target').toString()).toEqual('stub-value');
+      });
+
+      it('Can unmock method.', () => {
+        expect(() => jest.restoreAllMocks()).toChange(() => jest.isMockFunction(lazy('target').toString), {
+          from: true,
+          to:   false,
+        });
+      });
     });
   });
 
@@ -30,7 +62,7 @@ describe('Mock', () => {
       return Date;
     });
 
-    it('Stub method', () => {
+    it('Mock method', () => {
       subject();
       expect((new Date()).toString()).toEqual('stub-value');
     });
