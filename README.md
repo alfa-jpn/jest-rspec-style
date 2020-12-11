@@ -41,28 +41,28 @@ describe('Hoge', () => {
     context('When use change matcher', () => {
       it('Changed', () => {
         let cnt = 0;
-        epxect(() => cnt++).toChange(() => cnt);
-        epxect(() => cnt++).toChange(() => cnt, { from: 1, to: 2});
+        expect(() => cnt++).toChange(() => cnt);
+        expect(() => cnt++).toChange(() => cnt, { from: 1, to: 2});
       })
     })
 
     context('When use receive matcher', () => {
       it('Received', () => {
         const date = new Date();
-        epxect(date).toReceive('toString')
+        expect(date).toReceive('toString')
         date.toString();
       })
 
       it('2 times Received', () => {
         const date = new Date();
-        epxect(date).toReceive('toString', { times: 2 })
+        expect(date).toReceive('toString', { times: 2 })
         date.toString();
         date.toString();
       })
 
       it('Received with args', () => {
         const date = new Date();
-        epxect(date).toReceive('setTime', { with: [123] })
+        expect(date).toReceive('setTime', { with: [123] })
         date.setTime(123);
       })
     })
