@@ -17,10 +17,11 @@ describe('StubChain', () => {
       lazy('described_instance').toReceive('call');
     });
 
-    it('Call stub.', () => {
-      expect(lazy('target').call()).toEqual('Original');
-      subject();
-      expect(lazy('target').call()).toEqual(undefined);
+    it('Set stub.', () => {
+      expect(subject).toChange(() => lazy('target').call(), {
+        from: 'Original',
+        to:   undefined,
+      });
     });
   });
 
@@ -29,10 +30,10 @@ describe('StubChain', () => {
       lazy('described_instance').toReceiveMessageChain('call', 'hoge', 'fuga');
     });
 
-    it('Call stub.', () => {
-      expect(lazy('target').call()).toEqual('Original');
-      subject();
-      expect(lazy('target').call().hoge().fuga()).toEqual(undefined);
+    it('Set stub.', () => {
+      expect(subject).toChange(() => lazy('target').call().hoge && lazy('target').call().hoge().fuga, {
+        from: undefined,
+      });
     });
   });
 
@@ -45,10 +46,11 @@ describe('StubChain', () => {
       return lazy('described_instance').toReceive('call');
     });
 
-    it('Call stub.', () => {
-      expect(lazy('target').call()).toEqual('Original');
-      subject();
-      expect(lazy('target').call()).toEqual('Stub');
+    it('Set stub.', () => {
+      expect(subject).toChange(() => lazy('target').call(), {
+        from: 'Original',
+        to:   'Stub',
+      });
     });
 
     context('When before call #toReceive', () => {
@@ -71,10 +73,15 @@ describe('StubChain', () => {
       return lazy('described_instance').toReceive('call');
     });
 
+    it('Set stub.', () => {
+      expect(subject).toChange(() => jest.isMockFunction(lazy('target').call), {
+        from: false,
+        to:   true,
+      });
+    });
+
     it('Call original implementation.', () => {
-      expect(lazy('target').call()).toEqual('Original');
-      subject();
-      expect(lazy('target').call()).toEqual('Original');
+      expect(subject).not.toChange(() => lazy('target').call(), {from: 'Original'});
     });
 
     context('When before call #toReceive', () => {
@@ -99,10 +106,11 @@ describe('StubChain', () => {
       return lazy('described_instance').toReceive('call');
     });
 
-    it('Call do function.', () => {
-      expect(lazy('target').call()).toEqual('Original');
-      subject();
-      expect(lazy('target').call()).toEqual('Stub-Do');
+    it('Set stub.', () => {
+      expect(subject).toChange(() => lazy('target').call(), {
+        from: 'Original',
+        to:   'Stub-Do',
+      });
     });
 
     context('When before call #toReceive', () => {
@@ -113,6 +121,20 @@ describe('StubChain', () => {
       it('Throw error.', () => {
         expect(() => subject()).toThrowError('Must call, after call #toReceive or #toReceiveMessageChain');
       });
+    });
+  });
+
+  describe('#verify', () => {
+    subject(() => {
+      lazy('chain').verify();
+    });
+
+    lazy('chain', () => {
+      return lazy('described_instance').toReceive('call');
+    });
+
+    it('Not throw error.', () => {
+      expect(subject).not.toThrowError();
     });
   });
 });

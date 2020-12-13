@@ -1,14 +1,16 @@
-import JestTracker     from './jest_rspec_styles/jest_tracker';
-import LazyVariable    from './jest_rspec_styles/lazy_variable';
-import SharedExample   from './jest_rspec_styles/shared_example';
-import Mock            from './jest_rspec_styles/mock';
-import Lazy            from './jest_rspec_styles/lazy_variables/lazy.interface';
-import Subject         from './jest_rspec_styles/lazy_variables/subject.interface';
-import SharedExamples  from './jest_rspec_styles/shared_examples/shared_examples.interface';
-import IncludeExamples from './jest_rspec_styles/shared_examples/include_examples.interface';
-import Allow           from './jest_rspec_styles/mocks/allow.interface';
-import Matcher         from './jest_rspec_styles/matcher';
-import IMatcher        from './jest_rspec_styles/matchers/matchers.interface';
+import JestTracker       from './jest_rspec_styles/jest_tracker';
+import LazyVariable      from './jest_rspec_styles/lazy_variable';
+import SharedExample     from './jest_rspec_styles/shared_example';
+import Mock              from './jest_rspec_styles/mock';
+import Lazy              from './jest_rspec_styles/lazy_variables/lazy.interface';
+import Subject           from './jest_rspec_styles/lazy_variables/subject.interface';
+import SharedExamples    from './jest_rspec_styles/shared_examples/shared_examples.interface';
+import IncludeExamples   from './jest_rspec_styles/shared_examples/include_examples.interface';
+import Allow             from './jest_rspec_styles/mocks/allow.interface';
+import Expect            from './jest_rspec_styles/mocks/expect.interface';
+import Matcher           from './jest_rspec_styles/matcher';
+import IMatcher          from './jest_rspec_styles/matchers/matchers.interface';
+import ExpectedStubChain from './jest_rspec_styles/mocks/expected_stub_chain';
 
 /**
  * Global extension.
@@ -22,12 +24,15 @@ declare global {
   var includeExamples: IncludeExamples;
   var allow: Allow;
   var allowAnyInstanceOf: Allow;
+  var expectAnyInstanceOf: Expect;
   /* eslint-enable no-var */
 
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace jest {
     // eslint-disable-next-line @typescript-eslint/no-empty-interface
-    interface Matchers<R> extends IMatcher<R> {}
+    interface Matchers<R> extends IMatcher<R> {
+      toReceive(method: string): ExpectedStubChain;
+    }
   }
 }
 
@@ -42,6 +47,7 @@ export default class JestRSpecStyle {
   private static _lazy: LazyVariable;
   private static _sharedExample: SharedExample;
   private static _mock: Mock;
+  private static _matcher: Matcher;
 
   /**
    * Setup plugin.
@@ -51,6 +57,7 @@ export default class JestRSpecStyle {
     this._lazy = new LazyVariable(tracker);
     this._sharedExample = new SharedExample();
     this._mock = new Mock();
+    this._matcher = new Matcher(this._mock);
 
     global.context = global.describe;
     global.lazy = this._lazy.lazy.bind(this._lazy);
@@ -59,9 +66,12 @@ export default class JestRSpecStyle {
     global.includeExamples = this._sharedExample.includeExamples.bind(this._sharedExample);
     global.allow = this._mock.allow.bind(this._mock);
     global.allowAnyInstanceOf = this._mock.allowAnyInstanceOf.bind(this._mock);
-    expect.extend(Matcher);
+    global.expectAnyInstanceOf = this._mock.expectAnyInstanceOf.bind(this._mock);
 
-    afterEach(this._reset.bind(this));
+    this._matcher.setup();
+
+    beforeEach(this._reset.bind(this));
+    afterEach(this._verify.bind(this));
   }
 
   /**
@@ -70,5 +80,12 @@ export default class JestRSpecStyle {
   private static _reset(): void {
     this._lazy.reset();
     this._mock.reset();
+  }
+
+  /**
+   * Verify status.
+   */
+  private static _verify(): void {
+    this._mock.verify();
   }
 }
