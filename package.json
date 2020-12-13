@@ -1,6 +1,6 @@
 {
   "name": "jest-rspec-style",
-  "version": "0.0.5",
+  "version": "0.1.0",
   "description": "RSpec style extention for jest",
   "repository": "alfa-jpn/jest-rspec-style",
   "main": "dist/jest_rspec_style.js",
@@ -13,7 +13,15 @@
   },
   "keywords": [
     "rspec",
-    "jest"
+    "jest",
+    "stub",
+    "mock",
+    "allow",
+    "expect",
+    "allowAnyInstanceOf",
+    "expectAnyInstanceOf",
+    "toReceive",
+    "toChange"
   ],
   "author": "alfa-jpn",
   "license": "ISC",

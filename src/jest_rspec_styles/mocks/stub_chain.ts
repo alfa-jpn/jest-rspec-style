@@ -7,6 +7,7 @@ export default class StubChain {
   private _original?: (...args: any) => any;
   private _returningValue: any;
   private _function?: (...args: any) => any;
+  protected _mock?: jest.MockInstance<any, any>;
 
   /**
    * Initialize
@@ -18,9 +19,9 @@ export default class StubChain {
 
   /**
    * Call original implementation.
-   * @return {StubChain} chain instance.
+   * @return {this} chain instance.
    */
-  andCallOriginal(): StubChain {
+  andCallOriginal(): this {
     if (this._original) {
       this._function = this._original;
     } else {
@@ -32,9 +33,9 @@ export default class StubChain {
   /**
    * Set returning value.
    * @param {Object} value returning value
-   * @return {StubChain} chain instance.
+   * @return {this} chain instance.
    */
-  andReturn(value: any): StubChain {
+  andReturn(value: any): this {
     if (this._original) {
       this._returningValue = value;
     } else {
@@ -46,9 +47,9 @@ export default class StubChain {
   /**
    * Set execute function.
    * @param {Function} func function.
-   * @return {StubChain} chain instance.
+   * @return {this} chain instance.
    */
-  do(func: (...args: any) => any): StubChain {
+  do(func: (...args: any) => any): this {
     if (this._original) {
       this._function = func;
     } else {
@@ -60,18 +61,18 @@ export default class StubChain {
   /**
    * Mock method.
    * @param {string} method name of method.
-   * @return {StubChain} chain instance;
+   * @return {this} chain instance;
    */
-  toReceive(method: string): StubChain {
+  toReceive(method: string): this {
     return this.toReceiveMessageChain(method);
   }
 
   /**
    * Mock method chain.
    * @param {string} methods name of method.
-   * @return {StubChain} chain instance;
+   * @return {this} chain instance;
    */
-  toReceiveMessageChain(...methods: [string]): StubChain {
+  toReceiveMessageChain(...methods: [string]): this {
     this._original = this._target[methods[0]];
 
     const mocks: Array<jest.MockInstance<any, any>> = [];
@@ -90,18 +91,30 @@ export default class StubChain {
       return stub;
     }, this._target);
 
-    const stubChain: StubChain = eval('this');
-    mocks[mocks.length - 1].mockImplementation(function(...args) {
-      if (stubChain._returningValue) {
-        return stubChain._returningValue;
+    this._mock = mocks[mocks.length - 1];
+
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _this: StubChain = this;
+    this._mock.mockImplementation(function(...args) {
+      if (_this._returningValue) {
+        return _this._returningValue;
       }
 
-      if (stubChain._function) {
-        const context = eval('this');
-        return stubChain._function.bind(context)(...args);
+      if (_this._function) {
+        const callerContext = eval('this');
+        return _this._function.bind(callerContext)(...args);
       }
     });
 
     return this;
+  }
+
+  /**
+   * Verify calling state.
+   * @abstract
+   * @throws on fail.
+   */
+  verify(): void {
+    // Nothing to do in StubChain.
   }
 }

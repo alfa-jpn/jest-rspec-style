@@ -5,6 +5,10 @@ RSpec like DSL extension for jest.
 
 ## Installation
 
+```shell
+npm install --save-dev jest-rspec-style
+```
+
 ## Usage
 Usable RSpec like DSL.
 
@@ -55,14 +59,14 @@ describe('Hoge', () => {
 
       it('2 times Received', () => {
         const date = new Date();
-        expect(date).toReceive('toString', { times: 2 })
+        expect(date).toReceive('toString').times(2)
         date.toString();
         date.toString();
       })
 
       it('Received with args', () => {
         const date = new Date();
-        expect(date).toReceive('setTime', { with: [123] })
+        expect(date).toReceive('setTime').with(123)
         date.setTime(123);
       })
     })
@@ -109,7 +113,8 @@ describe('Hoge', () => {
 - context
 - lazy
 - expect(...).toChange(() => ..., { from: .., to: ..})
-- expect(...).toReceive(..., { with: .., times: ..})
+- expect(...).toReceive(...).with(..).times(..)
+- expectAnyInstanceOf(...).toReceive(...).with(..).times(..)
 
 ## Contributing
 Bug reports and pull requests are welcome on GitHub.

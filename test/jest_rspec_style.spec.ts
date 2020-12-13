@@ -153,13 +153,27 @@ describe('jest-rspec-style', () => {
     });
   });
 
-  describe('.allowAnyIntanceOf', () => {
+  describe('.allowAnyInstanceOf', () => {
     subject(() => {
       return (new Date()).toString();
     });
 
     beforeEach(() => {
       allowAnyInstanceOf(Date).toReceive('toString').andReturn('Stub value');
+    });
+
+    it('Return stub value', () => {
+      expect(subject()).toEqual('Stub value');
+    });
+  });
+
+  describe('.expectAnyInstanceOf', () => {
+    subject(() => {
+      return (new Date()).toString();
+    });
+
+    beforeEach(() => {
+      expectAnyInstanceOf(Date).toReceive('toString').andReturn('Stub value');
     });
 
     it('Return stub value', () => {

@@ -15,13 +15,25 @@ describe('Matcher', () => {
 
   describe('#toReceive', () => {
     subject(() => {
-      const date = new Date();
-      expect(date).toReceive('toString');
-      date.toString();
+      const date: any = new Date();
+      expect(date).toReceive('toString').with('hoge').times(2);
+      date.toString('hoge');
+      date.toString('hoge');
     });
 
     it('Usable', () => {
       subject();
+    });
+
+    context('When call not to receive', () => {
+      subject(() => {
+        const date = new Date();
+        expect(date).not.toReceive('toString');
+      });
+
+      it('Usable', () => {
+        subject();
+      });
     });
   });
 });
