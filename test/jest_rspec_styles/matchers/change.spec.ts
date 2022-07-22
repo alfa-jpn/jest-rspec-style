@@ -6,7 +6,8 @@ describe('toChange', () => {
       await lazy('expect');
       return null;
     } catch (e) {
-      return e.message;
+      const err = e as Error;
+      return err?.message;
     }
   });
 
